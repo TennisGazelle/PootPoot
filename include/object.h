@@ -19,6 +19,7 @@ class Object
     ~Object();
     void Update(unsigned int dt);
     void Render();
+    void Move(Direction dir);
 
     glm::mat4 GetModel();
 

@@ -78,8 +78,8 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  _angle += dt * M_PI/1000;
-  _model = glm::rotate(glm::mat4(1.0f), (_angle), glm::vec3(0.0, 1.0, 0.0));
+  //_angle = dt * M_PI/1000;
+  //_model = glm::rotate(_model, (_angle), glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()
@@ -104,3 +104,19 @@ void Object::Render()
   glDisableVertexAttribArray(1);
 }
 
+void Object::Move(Direction dir) {
+	static const float distance = 0.5f;
+	
+	glm::vec3 transformationVector(0.0f);
+	
+	switch (dir) {
+		case UP:
+			transformationVector.z = distance;
+			break;
+		case DOWN:
+		default:
+			transformationVector.z = -distance;
+			break;
+	}
+	_model = glm::translate(_model, transformationVector);
+}

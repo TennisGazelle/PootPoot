@@ -87,6 +87,30 @@ void Engine::Keyboard()
     {
       m_running = false;
     }
+    switch (m_event.key.keysym.sym) {
+		case SDLK_ESCAPE:
+			m_running = false;
+			break;
+		case SDLK_UP:
+			m_graphics->MoveCube(UP);
+			break;
+		case SDLK_DOWN:
+			m_graphics->MoveCube(DOWN);
+			break;
+		
+		//keypad controls for camera movement
+		case SDLK_1:
+			m_graphics->ShiftCamera(DOWN);
+			break;
+		case SDLK_3:
+			m_graphics->ShiftCamera(RIGHT);
+			break;
+		case SDLK_7:
+			m_graphics->ShiftCamera(UP);
+			break;
+		default:
+			break;
+	}
   }
 }
 

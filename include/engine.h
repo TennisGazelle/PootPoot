@@ -4,6 +4,8 @@
 #include <sys/time.h>
 #include <assert.h>
 
+#include "graphics_headers.h"
+
 #include "window.h"
 #include "graphics.h"
 

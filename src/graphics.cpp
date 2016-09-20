@@ -134,7 +134,7 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Send in premultiplied matrix to shader
-  glm::mat4 mvp = m_cube->GetModel() * m_camera->GetView() * m_camera->GetProjection(); 
+  glm::mat4 mvp = m_camera->GetProjection() * m_camera->GetView() * m_cube->GetModel(); 
   glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
@@ -148,6 +148,24 @@ void Graphics::Render()
     string val = ErrorString( error );
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
+}
+
+void Graphics::MoveCube(Direction dir) {
+	m_cube->Move(dir);
+}
+
+void Graphics::ShiftCamera(Direction dir) {
+	switch (dir) {
+		case DOWN:
+			m_camera->goToFrontView();
+			break;
+		case UP:
+			m_camera->goToTopView();
+			break;
+		case RIGHT:
+			m_camera->goToSideView();
+			break;
+	}
 }
 
 std::string Graphics::ErrorString(GLenum error)

@@ -17,6 +17,9 @@ class Graphics
     bool Initialize(int width, int height);
     void Update(unsigned int dt);
     void Render();
+    void MoveCube(Direction dir);
+	void ShiftCamera(Direction dir);
+
 
   private:
     std::string ErrorString(GLenum error);
