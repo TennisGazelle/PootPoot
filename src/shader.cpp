@@ -49,7 +49,7 @@ bool Shader::AddShader(GLenum ShaderType)
           uniform mat4 projectionMatrix; \
           uniform mat4 viewMatrix; \
           uniform mat4 modelMatrix; \
-          uniform mat4 preMultipliedMVPMatrix;   \
+          uniform mat4 mvpMatrix;   \
           \
           void main(void) \
           { \
