@@ -100,7 +100,7 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
-  m_preMultipliedMVPMatrix= m_shader->GetUniformLocation("preMultipliedMVPMatrix");
+  m_preMultipliedMVPMatrix= m_shader->GetUniformLocation("mvpMatrix");
   if (m_preMultipliedMVPMatrix == INVALID_UNIFORM_LOCATION)
   {
     printf("m_preMultipliedMVPMatrix not found\n");
