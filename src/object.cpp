@@ -2,32 +2,6 @@
 
 Object::Object()
 {  
-  /*
-    # Blender File for a Cube
-    o Cube
-    v 1.000000 -1.000000 -1.000000
-    v 1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 -1.000000
-    v 1.000000 1.000000 -0.999999
-    v 0.999999 1.000000 1.000001
-    v -1.000000 1.000000 1.000000
-    v -1.000000 1.000000 -1.000000
-    s off
-    f 2 3 4
-    f 8 7 6
-    f 1 5 6
-    f 2 6 7
-    f 7 8 4
-    f 1 4 8
-    f 1 2 4
-    f 5 8 6
-    f 2 1 6
-    f 3 2 7
-    f 3 7 4
-    f 5 1 8
-  */
-
   _vertices = {
     {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
     {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
@@ -119,4 +93,42 @@ void Object::Move(Direction dir) {
 			break;
 	}
 	_model = glm::translate(_model, transformationVector);
+}
+
+void Object::LoadVerticiesFromFile(std::string filename) {
+  //declare incoming variables stuff
+  Assimp::Importer _importer;
+  const aiScene* _aiScene = _importer.ReadFile(filename, aiProcess_Triangulate);
+  if (_aiScene == NULL) {
+    std::cerr << "File contents had problmes but was successfully opened." << std::endl;
+    return;
+  }
+
+  std::vector<Vertex> vertexVector;
+  std::vector<int> indexVector;
+
+    // iterate through the meshes and go through
+  for( int meshIndex = 0; meshIndex < _aiScene->mNumMeshes; meshIndex++ ){
+    int numFacesInMesh = _aiScene->mMeshes[meshIndex]->mNumFaces;
+    //iterate through faces
+    for( int faceIndex = 0; faceIndex < numFacesInMesh; faceIndex++ ){
+      //helper
+      Vertex tempVert(glm::vec3(0.0), glm::vec3(0.0));
+
+      //get val from faces' mIndeces array
+      for( int i = 0; i < 3; i++ ){
+        //go to aiMesh's mVertices Array
+        int vertice_index = _aiScene->mMeshes[meshIndex]->mFaces[faceIndex].mIndices[i];
+        
+        //get position 
+        for (int j = 0; j < 3; ++j){
+          tempVert.vertex[j] = _aiScene->mMeshes[meshIndex]->mVertices[vertice_index][j];
+        }
+
+        //add to the final vec
+        vertexVector.push_back(tempVert);
+        indexVector.push_back(vertice_index);
+      }
+    }
+  }
 }

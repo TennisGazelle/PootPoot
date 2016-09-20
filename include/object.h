@@ -10,6 +10,10 @@
 #include <assimp/color4.h>
 //#include <Magick++.h>
 
+#include <fstream>
+//#include <stream>
+#include <string>
+
 using namespace Assimp;
 
 class Object
@@ -20,6 +24,8 @@ class Object
     void Update(unsigned int dt);
     void Render();
     void Move(Direction dir);
+
+    void LoadVerticiesFromFile(std::string filename);
 
     glm::mat4 GetModel();
 
