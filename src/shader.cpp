@@ -49,11 +49,12 @@ bool Shader::AddShader(GLenum ShaderType)
           uniform mat4 projectionMatrix; \
           uniform mat4 viewMatrix; \
           uniform mat4 modelMatrix; \
+          uniform mat4 mvpMatrix;   \
           \
           void main(void) \
           { \
             vec4 v = vec4(v_position, 1.0); \
-            gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v; \
+            gl_Position = mvpMatrix * v; \
             color = v_color; \
           } \
           ";

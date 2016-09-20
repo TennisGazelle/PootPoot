@@ -100,6 +100,13 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
+  m_preMultipliedMVPMatrix= m_shader->GetUniformLocation("preMultipliedMVPMatrix");
+  if (m_preMultipliedMVPMatrix == INVALID_UNIFORM_LOCATION)
+  {
+    printf("m_preMultipliedMVPMatrix not found\n");
+    return false;
+  }
+
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
@@ -116,7 +123,7 @@ void Graphics::Update(unsigned int dt)
 void Graphics::Render()
 {
   //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Start the correct program
@@ -126,8 +133,12 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
-  // Render the object
+  // Send in premultiplied matrix to shader
+  glm::mat4 mvp = m_cube->GetModel() * m_camera->GetView() * m_camera->GetProjection(); 
+  glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
+  // Render the object
   m_cube->Render();
 
   // Get any errors from OpenGL

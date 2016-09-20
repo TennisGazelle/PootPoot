@@ -4,6 +4,14 @@
 #include <vector>
 #include "graphics_headers.h"
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h> 
+#include <assimp/color4.h>
+//#include <Magick++.h>
+
+using namespace Assimp;
+
 class Object
 {
   public:
@@ -15,13 +23,18 @@ class Object
     glm::mat4 GetModel();
 
   private:
-    glm::mat4 model;
-    std::vector<Vertex> Vertices;
-    std::vector<unsigned int> Indices;
-    GLuint VB;
-    GLuint IB;
+    glm::mat4 _model;
+    std::vector<Vertex> _vertices;
+    std::vector<unsigned int> _indices;
+    GLuint _V_BO;
+    GLuint _I_BO;
 
-    float angle;
+    //assimp
+    //Assimp::Importer _importer;
+    //const aiScene* _aiScene;
+
+    //irrelevant now
+    float _angle;
 };
 
 #endif /* OBJECT_H */
