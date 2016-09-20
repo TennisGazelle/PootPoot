@@ -2,6 +2,7 @@
 
 Object::Object()
 {  
+  /*
   _vertices = {
     {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
     {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
@@ -32,6 +33,9 @@ Object::Object()
   for(unsigned int i = 0; i < _indices.size(); i++) {
     _indices[i] = _indices[i] - 1;
   }
+  */
+
+  LoadVerticiesFromFile("../models/Torus Knot.obj");
 
   _angle = 0.0f;
 
@@ -104,9 +108,6 @@ void Object::LoadVerticiesFromFile(std::string filename) {
     return;
   }
 
-  std::vector<Vertex> vertexVector;
-  std::vector<int> indexVector;
-
     // iterate through the meshes and go through
   for( int meshIndex = 0; meshIndex < _aiScene->mNumMeshes; meshIndex++ ){
     int numFacesInMesh = _aiScene->mMeshes[meshIndex]->mNumFaces;
@@ -126,8 +127,8 @@ void Object::LoadVerticiesFromFile(std::string filename) {
         }
 
         //add to the final vec
-        vertexVector.push_back(tempVert);
-        indexVector.push_back(vertice_index);
+        _vertices.push_back(tempVert);
+        _indices.push_back(vertice_index);
       }
     }
   }
