@@ -2,7 +2,7 @@
 #### by Daniel Lopez for CPE 681 - Fall 2016 - University of Nevada, Reno
 If you haven't figured out by know, it's on https://github.com/TennisGazelle/PootPoot
 
-# Installation and Running
+## Installation and Running
 
 Installing the libraries
 ```
@@ -15,7 +15,7 @@ Building the game and running
 >$ ./PootPoot
 ```
 
-# Controls
+## Controls
 
 As of 9/20/2016
 
