@@ -97,6 +97,12 @@ void Engine::Keyboard()
 		case SDLK_DOWN:
 			m_graphics->MoveCube(DOWN);
 			break;
+		case SDLK_RIGHT:
+			m_graphics->MoveCube(RIGHT);
+			break;
+		case SDLK_LEFT:
+			m_graphics->MoveCube(LEFT);
+			break;
 		
 		//keypad controls for camera movement
 		case SDLK_1:
