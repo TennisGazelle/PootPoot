@@ -130,7 +130,7 @@ void Object::LoadVerticiesFromFile(std::string filename) {
         //get position 
         for (int j = 0; j < 3; ++j){
           tempVert.vertex[j] = _aiScene->mMeshes[meshIndex]->mVertices[vertice_index][j];
-          tempVert.color[j]=  float(rand() % 100) / 100.0f;
+          tempVert.color[j]=  float(rand()%100) / 100.0f;
         }
 
         //add to the final vec
