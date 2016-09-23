@@ -76,7 +76,8 @@ void Object::Render()
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _I_BO);
 
-  glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+  //glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_LINES, _indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
