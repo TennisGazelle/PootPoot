@@ -1,11 +1,10 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef __CAMERA_H_
+#define __CAMERA_H_
 
 #include "graphics_headers.h"
 
-class Camera
-{
-  public:
+class Camera {
+public:
     Camera();
     ~Camera();
     bool Initialize(int w, int h);
@@ -15,8 +14,8 @@ class Camera
     void goToFrontView();
     void goToSideView();
     void goToTopView();
-  
-  private:
+
+private:
     glm::mat4 projection;
     glm::mat4 view;
 };

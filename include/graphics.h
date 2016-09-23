@@ -1,38 +1,42 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef __GRAPHICS_H_
+#define __GRAPHICS_H_
 
 #include <iostream>
-using namespace std;
 
 #include "graphics_headers.h"
 #include "camera.h"
 #include "shader.h"
 #include "object.h"
+#include "flyers/player.h"
 
-class Graphics
-{
-  public:
+using namespace std;
+
+class Graphics {
+public:
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
     void Update(unsigned int dt);
     void Render();
     void MoveCube(Direction dir);
-	void ShiftCamera(Direction dir);
+    void ShiftCamera(Direction dir);
 
 
-  private:
+private:
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
     Shader *m_shader;
 
+    // things to give the shader
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
     GLint m_preMultipliedMVPMatrix;
 
+    // game object (will be changed out)
     Object *m_cube;
+    Player *m_player;
 };
 
 #endif /* GRAPHICS_H */

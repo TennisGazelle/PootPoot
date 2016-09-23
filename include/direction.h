@@ -2,11 +2,11 @@
 #define __DIRECTION_H_
 
 enum Direction {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	STILL
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    STILL
 };
 
 #endif

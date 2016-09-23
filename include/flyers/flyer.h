@@ -8,7 +8,7 @@ public:
 	Flyer();
 	~Flyer();
 
-	static Flyer spawnFlyer();
+	static Flyer* spawnFlyer();
 	
 	glm::vec3 getVelocityVector() const;
 	void updateVelocityVector(glm::vec3 pVelocityVector);
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif FLYER_H
+#endif //FLYER_H

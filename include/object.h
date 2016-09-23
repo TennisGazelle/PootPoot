@@ -1,5 +1,5 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef __OBJECT_H_
+#define __OBJECT_H_
 
 #include <cstdlib>
 #include <vector>
@@ -12,14 +12,12 @@
 //#include <Magick++.h>
 
 #include <fstream>
-//#include <stream>
 #include <string>
 
 using namespace Assimp;
 
-class Object
-{
-  public:
+class Object {
+public:
     Object();
     ~Object();
     void Update(unsigned int dt);
@@ -30,16 +28,12 @@ class Object
 
     glm::mat4 GetModel();
 
-  private:
+private:
     glm::mat4 _model;
     std::vector<Vertex> _vertices;
     std::vector<unsigned int> _indices;
     GLuint _V_BO;
     GLuint _I_BO;
-
-    //assimp
-    //Assimp::Importer _importer;
-    //const aiScene* _aiScene;
 
     //irrelevant now
     float _angle;

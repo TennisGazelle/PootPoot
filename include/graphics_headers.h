@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_HEADERS_H
-#define GRAPHICS_HEADERS_H
+#ifndef __GRAPHICS_HEADERS_H_
+#define __GRAPHICS_HEADERS_H_
 
 #include <iostream>
 
@@ -22,6 +22,7 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
+// add any single definition struct headers here
 #include "vertex.h"
 #include "direction.h"
 

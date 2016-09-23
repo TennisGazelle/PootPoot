@@ -71,8 +71,8 @@ void Object::Render()
   glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, _V_BO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,position)); //should be 0
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));  //should be one glm::vec off
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _I_BO);
 
@@ -130,7 +130,7 @@ void Object::LoadVerticiesFromFile(std::string filename) {
         
         //get position 
         for (int j = 0; j < 3; ++j){
-          tempVert.vertex[j] = _aiScene->mMeshes[meshIndex]->mVertices[vertice_index][j];
+          tempVert.position[j] = _aiScene->mMeshes[meshIndex]->mVertices[vertice_index][j];
           tempVert.color[j]=  float(rand()%100) / 100.0f;
         }
 

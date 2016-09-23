@@ -3,12 +3,11 @@
 
 #include "graphics_headers.h"
 
-struct Vertex
-{
-  glm::vec3 vertex;
+struct Vertex {
+  glm::vec3 position;
   glm::vec3 color;
 
-  Vertex(glm::vec3 v, glm::vec3 c): vertex(v), color(c) {}
+  Vertex(glm::vec3 v, glm::vec3 c): position(v), color(c) {}
 };
 
 #endif
