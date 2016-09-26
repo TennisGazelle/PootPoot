@@ -28,9 +28,11 @@ public:
 
     glm::mat4 GetModel();
 
-private:
+protected:
     glm::mat4 _model;
     std::vector<Vertex> _vertices;
+
+private:
     std::vector<unsigned int> _indices;
     GLuint _V_BO;
     GLuint _I_BO;
