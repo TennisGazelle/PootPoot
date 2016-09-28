@@ -165,7 +165,28 @@ void Graphics::ShiftCamera(Direction dir) {
 		case RIGHT:
 			m_camera->goToSideView();
 			break;
+    default:
+      break;
 	}
+}
+
+void Graphics::Keyboard(SDL_Event sdl_event) {
+	switch (sdl_event.key.keysym.sym) {
+    case SDLK_UP:
+      this->MoveCube(UP);
+      break;
+    case SDLK_DOWN:
+      this->MoveCube(DOWN);
+      break;
+    case SDLK_RIGHT:
+      this->MoveCube(RIGHT);
+      break;
+    case SDLK_LEFT:
+      this->MoveCube(LEFT);
+      break;
+    default:
+      break;
+  }
 }
 
 std::string Graphics::ErrorString(GLenum error)

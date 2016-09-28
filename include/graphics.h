@@ -20,7 +20,7 @@ public:
     void Render();
     void MoveCube(Direction dir);
     void ShiftCamera(Direction dir);
-
+    void Keyboard(SDL_Event sdl_event);
 
 private:
     std::string ErrorString(GLenum error);
