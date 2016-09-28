@@ -52,17 +52,29 @@ void Flyer::applyForce(glm::vec3 pAccel) {
 	_accelerationVector += pAccel;
 }
 
+float angleBetweenTwoVectors(glm::vec3 first, glm::vec3 second) {
+	return acos(glm::dot(first, second)/(first.length() * second.length())) * 0.01;
+	//return acos(glm::dot(first, second));
+}
+
 void Flyer::update(unsigned int dt) {
 	// move in that given velocity
 	glm::vec3 positionVector = glm::vec3(_model[3]);
 	positionVector += (0.5f * float(dt * dt) * _accelerationVector);
 	positionVector += (float(dt) * _velocityVector);
-	_model[3] = glm::vec4(positionVector, _model[3][3]);
+
+	glm::vec3 preRotateVector = _velocityVector;
 
 	//update those parameters
 	_velocityVector += float(dt) * _accelerationVector;
+	_velocityVector *= 0.94;
 	_accelerationVector *= 0.1;
 
+	float turn = angleBetweenTwoVectors(preRotateVector, _velocityVector);
+
+	//change position and otherwise
+	_model = glm::rotate(_model, turn, glm::vec3(0.0,1.0,0.0));
+	_model[3] = glm::vec4(positionVector, _model[3][3]);
 }
 
 void Flyer::render() {
@@ -70,35 +82,3 @@ void Flyer::render() {
 }
 
 #endif
-
-
-/*
- *
-class Flyer : private Object {
-public:
-	Flyer();
-	~Flyer();
-
-	static Flyer* spawnFlyer();
-
-	glm::vec3 getVelocityVector() const;
-	void updateVelocityVector(glm::vec3 pVelocityVector);
-
-	// collision check
-	bool hasHit() const;
-
-	// affine transformations
-	void setPosition(glm::vec3 pPosition);
-	void applyForce(glm::vec3 pAccel);
-
-	// virtual functions that all must overload
-	virtual void update(unsigned int dt) = 0;
-	virtual void render() = 0;
-
-private:
-	glm::vec3 _accelerationVector;
-	glm::vec3 _velocityVector;
-	int _radius;
-
-};
- */

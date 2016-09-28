@@ -9,6 +9,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
 #include <assimp/color4.h>
+#include <glm/gtx/vector_angle.hpp>
 //#include <Magick++.h>
 
 #include <fstream>
@@ -20,11 +21,12 @@ class Object {
 public:
     Object();
     ~Object();
+    void Init(const std::string& filename);
     void Update(unsigned int dt);
     void Render();
     void Move(Direction dir);
 
-    void LoadVerticiesFromFile(std::string filename);
+    void LoadVerticiesFromFile(const std::string& filename);
 
     glm::mat4 GetModel();
 

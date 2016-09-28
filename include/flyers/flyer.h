@@ -2,8 +2,9 @@
 #define FLYER_H
 
 #include "../object.h"
+#include <tgmath.h>
 
-class Flyer : private Object {
+class Flyer : public Object {
 public:
 	Flyer();
 	~Flyer();
@@ -27,6 +28,7 @@ public:
 private:
 	glm::vec3 _accelerationVector;
 	glm::vec3 _velocityVector;
+
 	int _radius;
 
 };

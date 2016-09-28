@@ -2,42 +2,17 @@
 
 Object::Object()
 {  
-  /*
-  _vertices = {
-    {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
-    {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-    {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
-    {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
-    {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
-    {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-    {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
-  };
 
-  _indices = {
-    2, 3, 4,
-    8, 7, 6,
-    1, 5, 6,
-    2, 6, 7,
-    7, 8, 4,
-    1, 4, 8,
-    1, 2, 4,
-    5, 8, 6,
-    2, 1, 6,
-    3, 2, 7,
-    3, 7, 4,
-    5, 1, 8
-  };
+}
 
-  // The index works at a 0th index
-  for(unsigned int i = 0; i < _indices.size(); i++) {
-    _indices[i] = _indices[i] - 1;
-  }
-  */
+Object::~Object()
+{
+  _vertices.clear();
+  _indices.clear();
+}
 
-  LoadVerticiesFromFile("../models/Torus Knot.obj");
-
-  _angle = 0.0f;
+void Object::Init(const std::string& filename) {
+  LoadVerticiesFromFile(filename);
 
   glGenBuffers(1, &_V_BO);
   glBindBuffer(GL_ARRAY_BUFFER, _V_BO);
@@ -46,12 +21,6 @@ Object::Object()
   glGenBuffers(1, &_I_BO);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _I_BO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _indices.size(), &_indices[0], GL_STATIC_DRAW);
-}
-
-Object::~Object()
-{
-  _vertices.clear();
-  _indices.clear();
 }
 
 void Object::Update(unsigned int dt)
@@ -76,8 +45,8 @@ void Object::Render()
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _I_BO);
 
-  //glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
-  glDrawElements(GL_LINES, _indices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+  //glDrawElements(GL_LINES, _indices.size(), GL_UNSIGNED_INT, 0);
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
@@ -106,7 +75,7 @@ void Object::Move(Direction dir) {
 	_model = glm::translate(_model, transformationVector);
 }
 
-void Object::LoadVerticiesFromFile(std::string filename) {
+void Object::LoadVerticiesFromFile(const std::string& filename) {
   //declare incoming variables stuff
   Assimp::Importer _importer;
   const aiScene* _aiScene = _importer.ReadFile(filename, aiProcess_Triangulate);

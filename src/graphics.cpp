@@ -45,7 +45,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_cube = new Object();
+  m_player = new Player();
 
   // Set up the shaders
   m_shader = new Shader();
@@ -117,7 +117,7 @@ bool Graphics::Initialize(int width, int height)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  m_cube->Update(dt);
+  m_player->update(dt);
 }
 
 void Graphics::Render()
@@ -134,12 +134,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Send in premultiplied matrix to shader
-  glm::mat4 mvp = m_camera->GetProjection() * m_camera->GetView() * m_cube->GetModel(); 
+  glm::mat4 mvp = m_camera->GetProjection() * m_camera->GetView() * m_player->GetModel(); 
   glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_cube->GetModel()));
-  // Render the object
-  m_cube->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_player->GetModel()));
+  m_player->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -150,39 +149,35 @@ void Graphics::Render()
   }
 }
 
-void Graphics::MoveCube(Direction dir) {
-	m_cube->Move(dir);
-}
-
 void Graphics::ShiftCamera(Direction dir) {
-	switch (dir) {
-		case DOWN:
-			m_camera->goToFrontView();
-			break;
-		case UP:
-			m_camera->goToTopView();
-			break;
-		case RIGHT:
-			m_camera->goToSideView();
-			break;
+  switch (dir) {
+    case DOWN:
+      m_camera->goToFrontView();
+        break;
+    case UP:
+      m_camera->goToTopView();
+        break;
+    case RIGHT:
+      m_camera->goToSideView();
+        break;
     default:
       break;
-	}
+  }
 }
 
 void Graphics::Keyboard(SDL_Event sdl_event) {
 	switch (sdl_event.key.keysym.sym) {
     case SDLK_UP:
-      this->MoveCube(UP);
+      m_player->moveDirection(UP);
       break;
     case SDLK_DOWN:
-      this->MoveCube(DOWN);
+      m_player->moveDirection(DOWN);
       break;
     case SDLK_RIGHT:
-      this->MoveCube(RIGHT);
+      m_player->moveDirection(RIGHT);
       break;
     case SDLK_LEFT:
-      this->MoveCube(LEFT);
+      m_player->moveDirection(LEFT);
       break;
     default:
       break;

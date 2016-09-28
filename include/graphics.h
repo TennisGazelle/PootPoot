@@ -2,6 +2,7 @@
 #define __GRAPHICS_H_
 
 #include <iostream>
+#include <SDL2/SDL.h>
 
 #include "graphics_headers.h"
 #include "camera.h"
@@ -18,7 +19,6 @@ public:
     bool Initialize(int width, int height);
     void Update(unsigned int dt);
     void Render();
-    void MoveCube(Direction dir);
     void ShiftCamera(Direction dir);
     void Keyboard(SDL_Event sdl_event);
 
@@ -35,7 +35,6 @@ private:
     GLint m_preMultipliedMVPMatrix;
 
     // game object (will be changed out)
-    Object *m_cube;
     Player *m_player;
 };
 

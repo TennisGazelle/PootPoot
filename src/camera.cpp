@@ -50,7 +50,7 @@ void Camera::goToSideView() {
 }
 
 void Camera::goToTopView(){
-  view = glm::lookAt( glm::vec3(0.0, -16.0, 0.5), //Eye Position
+  view = glm::lookAt( glm::vec3(0.0, 20.0, -0.5), //Eye Position
                       glm::vec3(0.0, 0.0, 0.0), //Focus point
                       glm::vec3(0.0, 1.0, 0.0)); //Positive Y is up
 }

@@ -7,7 +7,7 @@
 #include "player.h"
 
 Player::Player() {
-
+  Init("../models/mainplaner.obj");
 }
 
 Player::~Player() {
@@ -15,7 +15,25 @@ Player::~Player() {
 }
 
 void Player::moveDirection(Direction dir) {
-
+  glm::vec3 pushDirection;
+  switch(dir) {
+    case UP:
+      pushDirection = glm::vec3(0.0,0.0,0.001);
+      break;
+    case DOWN:
+      pushDirection = glm::vec3(0.0,0.0,-0.001);
+      break;
+    case LEFT:
+      pushDirection = glm::vec3(0.001,0.0,0.0);
+      break;
+    case RIGHT:
+      pushDirection = glm::vec3(-0.001,0.0,0.0);
+      break;
+    default:
+      pushDirection = glm::vec3(0.0);
+      break;
+  }
+  applyForce(pushDirection);
 }
 
 void Player::shootDirection(Direction dir) {
