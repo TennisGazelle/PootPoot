@@ -7,20 +7,27 @@
 
 #include "bullet.h"
 
-Bullet::Bullet() {
-
+Bullet::Bullet(glm::vec3 pDirection, glm::vec3 pInitialPosition) {
+  //check for initial bullet
+  if (Object::_vertices.size() == 0) {
+    Init("../models/bullet.obj");
+  }
+  _velocityVector = pDirection;
+  _model[3] = glm::vec4(pInitialPosition, _model[3][3]);
 }
 
 Bullet::~Bullet(){
 
 }
 
-void Bullet::update(unsigned int dt) {
-	//do NOT slow down the acceleration, but die, if the dt is long enough
+void Bullet::Update(unsigned int dt) {
+  glm::vec3 position = glm::vec3(_model[3]);
+  position += float(dt) * _velocityVector;
+  _model[3] = glm::vec4(position, _model[3][3]);
 }
 
 void Bullet::render() {
-	Flyer::render();
+	Object::Render();
 }
 
 #endif

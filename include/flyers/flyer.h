@@ -18,7 +18,6 @@ public:
 	bool hasHit(Flyer* otherFlyer) const;
 
 	// affine transformations
-	void setPosition(glm::vec3 pPosition);
 	void applyForce(glm::vec3 pAccel);
 
 	// virtual functions that all must overload
@@ -30,7 +29,6 @@ private:
 	glm::vec3 _velocityVector;
 
 	int _radius;
-
 };
 
 

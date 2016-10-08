@@ -47,6 +47,9 @@ bool Graphics::Initialize(int width, int height)
   // Create the object
   m_player = new Player();
 
+  //set up the sides
+  boundarySize = 10;
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -118,12 +121,17 @@ void Graphics::Update(unsigned int dt)
 {
   // Update the object
   m_player->update(dt);
+  for (int i = 0; i < bullets.size(); i++) {
+    bullets[i]->Update(dt);
+  }
+  CheckBounds();
 }
 
 void Graphics::Render()
 {
   //clear the screen
   glClearColor(0.0, 0.0, 0.0, 1.0);
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Start the correct program
@@ -132,13 +140,24 @@ void Graphics::Render()
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+  glm::mat4 mvp;
+
+  for (int i = 0; i < bullets.size(); i++) {
+    // Send in premultiplied matrix to shader
+    mvp = m_camera->GetProjection() * m_camera->GetView() * bullets[i]->GetModel(); 
+    glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
+
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bullets[i]->GetModel()));
+    bullets[i]->Render();  
+  }
 
   // Send in premultiplied matrix to shader
-  glm::mat4 mvp = m_camera->GetProjection() * m_camera->GetView() * m_player->GetModel(); 
+  mvp = m_camera->GetProjection() * m_camera->GetView() * m_player->GetModel(); 
   glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_player->GetModel()));
-  m_player->Render();
+  m_player->Render();  
+
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -166,7 +185,7 @@ void Graphics::ShiftCamera(Direction dir) {
 }
 
 void Graphics::Keyboard(SDL_Event sdl_event) {
-	switch (sdl_event.key.keysym.sym) {
+  switch (sdl_event.key.keysym.sym) {
     case SDLK_UP:
       m_player->moveDirection(UP);
       break;
@@ -178,6 +197,18 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
       break;
     case SDLK_LEFT:
       m_player->moveDirection(LEFT);
+      break;
+    case SDLK_w:
+      bullets.push_back(m_player->shootDirection(UP));
+      break;
+    case SDLK_a:
+      bullets.push_back(m_player->shootDirection(LEFT));
+      break;
+    case SDLK_s:
+      bullets.push_back(m_player->shootDirection(DOWN));
+      break;
+    case SDLK_d:
+      bullets.push_back(m_player->shootDirection(RIGHT));
       break;
     default:
       break;
@@ -213,6 +244,23 @@ std::string Graphics::ErrorString(GLenum error)
   else
   {
     return "None";
+  }
+}
+
+void Graphics::CheckBounds() {
+  // if the bullet goes outside, or if the player goes outside the
+  // boundaries, force them back to the opposite side
+  glm::vec4 position;
+  for (int i = 0; i < bullets.size(); i++) {
+    position = bullets[i]->GetModel()[3];
+    
+    if (position.x > boundarySize) position.x = -boundarySize;
+    else if (position.x < -boundarySize) position.x = boundarySize;
+
+    if (position.z > boundarySize) position.z = -boundarySize;
+    else if (position.z < -boundarySize) position.z = boundarySize;
+    
+    bullets[i]->setPosition(glm::vec3(position));    
   }
 }
 

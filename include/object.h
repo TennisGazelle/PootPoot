@@ -29,6 +29,7 @@ public:
     void LoadVerticiesFromFile(const std::string& filename);
 
     glm::mat4 GetModel();
+    void setPosition(glm::vec3 pPosition);
 
 protected:
     glm::mat4 _model;

@@ -34,6 +34,10 @@ glm::mat4 Object::GetModel()
   return _model;
 }
 
+void Object::setPosition(glm::vec3 pPosition) {
+  _model[3] = glm::vec4(pPosition, _model[3][3]);
+}
+
 void Object::Render()
 {
   glEnableVertexAttribArray(0);
@@ -109,4 +113,17 @@ void Object::LoadVerticiesFromFile(const std::string& filename) {
       }
     }
   }
+  /*
+  std::vector<unsigned int> line_indices;
+  for (int i = 0; i < _indices.size(); i++) {
+    line_indices.push_back(_indices[i]);
+    if (i%3 == 2) {
+      line_indices.push_back(_indices[i-1]);
+      line_indices.push_back(_indices[i]);
+      line_indices.push_back(_indices[i-2]);
+      line_indices.push_back(_indices[i]);
+    }
+  }
+  _indices = line_indices;
+  */
 }

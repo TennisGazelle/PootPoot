@@ -44,10 +44,6 @@ bool Flyer::hasHit(Flyer* otherFlyer) const {
 	return distance.length() < tolerance;
 }
 
-void Flyer::setPosition(glm::vec3 pPosition) {
-	_model[3] = glm::vec4(pPosition, _model[3][3]);
-}
-
 void Flyer::applyForce(glm::vec3 pAccel) {
 	_accelerationVector += pAccel;
 }

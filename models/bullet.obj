@@ -1,0 +1,12 @@
+# Blender v2.69 (sub 0) OBJ File: 'pootpoot_models.blend'
+# www.blender.org
+mtllib bullet.mtl
+o Plane_Plane.002
+v 0.182003 0.195289 -0.205126
+v 0.000000 -0.026052 0.000291
+v -0.182003 0.195289 -0.205126
+v 0.000000 0.000000 -1.000297
+usemtl None
+s off
+f 1 2 4
+f 3 4 2

@@ -36,23 +36,30 @@ void Player::moveDirection(Direction dir) {
   applyForce(pushDirection);
 }
 
-void Player::shootDirection(Direction dir) {
+Bullet* Player::shootDirection(Direction dir) {
+  switch(dir) {
+    case UP:
+    default:
+      return new Bullet(glm::vec3(0.0,0.0,0.01), glm::vec3(_model[3]));
+      break;
+    case DOWN:
+      return new Bullet(glm::vec3(0.0,0.0,-0.01), glm::vec3(_model[3]));
+      break;
+    case LEFT:
+      return new Bullet(glm::vec3(0.01,0.0,0.0), glm::vec3(_model[3]));
+      break;
+    case RIGHT:
+      return new Bullet(glm::vec3(-0.01,0.0,0.0), glm::vec3(_model[3]));
+      break;
+  }
+}
 
+void Player::Update(unsigned int dt) {
+  Object::Update(dt);
+}
+
+void Player::Render() {
+  Object::Render();
 }
 
 #endif
-
-/*
- *
-class Player : public Flyer {
-public:
-	Player();
-	~Player();
-
-	void moveDirection(Direction dir);
-	void shootDirection(Direction dir);
-
-private:
-
-};
- */
