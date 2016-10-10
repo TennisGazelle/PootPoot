@@ -35,9 +35,10 @@ protected:
     glm::mat4 _model;
     std::vector<Vertex> _vertices;
 
+    GLuint _V_BO;
 private:
     std::vector<unsigned int> _indices;
-    GLuint _V_BO;
+    //GLuint _V_BO;
     GLuint _I_BO;
 
     //irrelevant now

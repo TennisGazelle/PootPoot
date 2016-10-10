@@ -36,20 +36,20 @@ void Player::moveDirection(Direction dir) {
   applyForce(pushDirection);
 }
 
-Bullet* Player::shootDirection(Direction dir) {
+void Player::shootDirection(Direction dir) {
   switch(dir) {
     case UP:
     default:
-      return new Bullet(glm::vec3(0.0,0.0,0.01), glm::vec3(_model[3]));
+      //return new Bullet(glm::vec3(0.0,0.0,0.01), glm::vec3(_model[3]));
       break;
     case DOWN:
-      return new Bullet(glm::vec3(0.0,0.0,-0.01), glm::vec3(_model[3]));
+      //return new Bullet(glm::vec3(0.0,0.0,-0.01), glm::vec3(_model[3]));
       break;
     case LEFT:
-      return new Bullet(glm::vec3(0.01,0.0,0.0), glm::vec3(_model[3]));
+      //return new Bullet(glm::vec3(0.01,0.0,0.0), glm::vec3(_model[3]));
       break;
     case RIGHT:
-      return new Bullet(glm::vec3(-0.01,0.0,0.0), glm::vec3(_model[3]));
+      //return new Bullet(glm::vec3(-0.01,0.0,0.0), glm::vec3(_model[3]));
       break;
   }
 }

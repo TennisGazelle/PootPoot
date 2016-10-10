@@ -38,7 +38,7 @@ private:
     // game object (will be changed out)
     Player *m_player;
 
-    std::vector<Bullet*> bullets;
+    Bullet bullets;
 
     //field area size
     int boundarySize;

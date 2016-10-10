@@ -43,9 +43,10 @@ bool Graphics::Initialize(int width, int height)
     printf("Camera Failed to Initialize\n");
     return false;
   }
-
+std::cout << "before the player constructor" << std::endl;
   // Create the object
   m_player = new Player();
+std::cout << "after" << std::endl;
 
   //set up the sides
   boundarySize = 10;
@@ -113,7 +114,7 @@ bool Graphics::Initialize(int width, int height)
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-
+std::cout << "after graphics init" << endl;
   return true;
 }
 
@@ -121,9 +122,7 @@ void Graphics::Update(unsigned int dt)
 {
   // Update the object
   m_player->update(dt);
-  for (int i = 0; i < bullets.size(); i++) {
-    bullets[i]->Update(dt);
-  }
+  bullets.Update(dt);
   CheckBounds();
 }
 
@@ -142,13 +141,13 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
   glm::mat4 mvp;
 
-  for (int i = 0; i < bullets.size(); i++) {
+  for (int i = 0; i < bullets.getSize(); i++) {
     // Send in premultiplied matrix to shader
-    mvp = m_camera->GetProjection() * m_camera->GetView() * bullets[i]->GetModel(); 
+    mvp = m_camera->GetProjection() * m_camera->GetView() * bullets.GetModelAt(i); 
     glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
 
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bullets[i]->GetModel()));
-    bullets[i]->Render();  
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bullets.GetModelAt(i)));
+    bullets.RenderAtIndex(i);
   }
 
   // Send in premultiplied matrix to shader
@@ -199,16 +198,17 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
       m_player->moveDirection(LEFT);
       break;
     case SDLK_w:
-      bullets.push_back(m_player->shootDirection(UP));
+      //bullets.makeBullet(
+      //bullets.add(m_player->shootDirection(UP));
       break;
     case SDLK_a:
-      bullets.push_back(m_player->shootDirection(LEFT));
+      //bullets.push_back(m_player->shootDirection(LEFT));
       break;
     case SDLK_s:
-      bullets.push_back(m_player->shootDirection(DOWN));
+      //bullets.push_back(m_player->shootDirection(DOWN));
       break;
     case SDLK_d:
-      bullets.push_back(m_player->shootDirection(RIGHT));
+      //bullets.push_back(m_player->shootDirection(RIGHT));
       break;
     default:
       break;
@@ -251,8 +251,8 @@ void Graphics::CheckBounds() {
   // if the bullet goes outside, or if the player goes outside the
   // boundaries, force them back to the opposite side
   glm::vec4 position;
-  for (int i = 0; i < bullets.size(); i++) {
-    position = bullets[i]->GetModel()[3];
+  for (int i = 0; i < bullets.getSize(); i++) {
+    position = bullets.GetModelAt(i)[3];
     
     if (position.x > boundarySize) position.x = -boundarySize;
     else if (position.x < -boundarySize) position.x = boundarySize;
@@ -260,7 +260,7 @@ void Graphics::CheckBounds() {
     if (position.z > boundarySize) position.z = -boundarySize;
     else if (position.z < -boundarySize) position.z = boundarySize;
     
-    bullets[i]->setPosition(glm::vec3(position));    
+    bullets.setPosition(glm::vec3(position));    
   }
 }
 

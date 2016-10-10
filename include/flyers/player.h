@@ -17,10 +17,10 @@ public:
 	void Render();
 	
 	void moveDirection(Direction dir);
-	Bullet* shootDirection(Direction dir);
+	void shootDirection(Direction dir);
 
 private:	
-
+	Bullet* _bulletFactory;
 };
 
 #endif
