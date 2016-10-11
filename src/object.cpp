@@ -133,5 +133,5 @@ void Object::LoadVerticiesFromFile(const std::string& filename) {
 
 bool hasTwoObjectsHit(Object* first, Object* second) {
   glm::vec3 distanceBetweenTwo = glm::vec3(first->GetModel()[3] - second->GetModel()[3]);
-  return abs(distanceBetweenTwo.length()) <= 0.1;
+  return abs(distanceBetweenTwo.length()) <= 2.0;
 }

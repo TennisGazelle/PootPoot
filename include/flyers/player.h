@@ -19,7 +19,11 @@ public:
 	void moveDirection(Direction dir);
 	Bullet* shootDirection(Direction dir);
 
+	int getHealth() const;
+	void decrementHealth();
+
 private:	
+	int health;
 
 };
 

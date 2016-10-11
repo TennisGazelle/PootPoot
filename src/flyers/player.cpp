@@ -8,6 +8,7 @@
 
 Player::Player() {
   Init("../models/mainplaner.obj");
+  health = 5;
 }
 
 Player::~Player() {
@@ -60,6 +61,14 @@ void Player::Update(unsigned int dt) {
 
 void Player::Render() {
   Object::Render();
+}
+
+int Player::getHealth() const {
+  return health;
+}
+
+void Player::decrementHealth() {
+  health--;
 }
 
 #endif

@@ -41,7 +41,7 @@ void Camera::goToSideView() {
 }
 
 void Camera::goToTopView() {
-  _cameraPosition = glm::vec3(0.0, 20.0, -0.5);
+  _cameraPosition = glm::vec3(0.0, 50.0, -0.5);
   this->recalc();
 }
 
@@ -72,4 +72,5 @@ void Camera::recalc(){
   view = glm::lookAt( _cameraPosition, //Eye Position
                       _focusPoint, //Focus point
                       GLOBAL_UP); //Positive Y is up
+
 }

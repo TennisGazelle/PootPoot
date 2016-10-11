@@ -13,7 +13,7 @@ Bullet::Bullet(glm::vec3 pDirection, glm::vec3 pInitialPosition) {
     Init("../models/bullet.obj");
   }
   _velocityVector = pDirection;
-  _model[3] = glm::vec4(pInitialPosition, _model[3][3]);
+  _model[3] = glm::vec4(pInitialPosition+(100.0f*pDirection), _model[3][3]);
   life_count = 500;
 }
 

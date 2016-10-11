@@ -127,7 +127,7 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
-void Graphics::Update(unsigned int dt)
+bool Graphics::Update(unsigned int dt)
 {
   // Update the object
   m_player->update(dt);
@@ -144,6 +144,26 @@ void Graphics::Update(unsigned int dt)
   
   // update the camera to follow the player  
   //m_camera->updateFocusPoint(glm::vec3(m_player->GetModel()[3]));
+
+  // kill the game if/when there's a bullet hitting the player
+  int shot = this->hasPlayerBeenShot();
+  if (shot == 1 || shot == 3) {
+    m_player->decrementHealth();
+    std::cout << "player health is now: " << m_player->getHealth() << std::endl;
+  }
+  if (shot == 2 || shot == 3) {
+    m_opponent->decrementHealth();
+    std::cout << "opponent health is now: " << m_opponent->getHealth() << std::endl;
+  }
+
+  if (m_player->getHealth() <= 0) {
+    std::cout << "You lost!" << std::endl;
+    return false;    
+  }
+  if (m_opponent->getHealth() <= 0) {
+    std::cout << "You Won!" << std::endl;
+    return false;
+  }
 
   // opponent AI stuff
   static unsigned int movementTimer = 0;
@@ -171,6 +191,7 @@ void Graphics::Update(unsigned int dt)
 
   movementTimer = rand() % 100;
   shootingTimer++;
+  return true;
 }
 
 void Graphics::Render()
@@ -314,6 +335,7 @@ std::string Graphics::ErrorString(GLenum error)
 
 void Graphics::CheckBounds() {
   // if the bullet goes outside, or if the player goes outside the
+
   // boundaries, force them back to the opposite side
   glm::vec4 position;
 
@@ -346,13 +368,26 @@ void Graphics::CheckBounds() {
 
 }
 
-bool Graphics::hasPlayerBeenShot() {
+bool areWithinHittingDistance(glm::mat4 first, glm::mat4 second) {
+  glm::vec3 distance = glm::vec3(first[3]) - glm::vec3(second[3]);
+  return glm::distance(first[3], second[3]) <= 1.0;
+}
+
+int Graphics::hasPlayerBeenShot() {
   for (int i = 0; i < bullets.size(); i++) {
-    if (hasTwoObjectsHit((Object*)m_player, (Object*)bullets[i])) {
+    if (areWithinHittingDistance(m_player->GetModel(), bullets[i]->GetModel())) {
+      delete bullets[i];
+      bullets.erase(bullets.begin()+i);
       return 1;
-    } else if (hasTwoObjectsHit((Object*)m_opponent, (Object*)bullets[i])) {
+    } else if (areWithinHittingDistance(m_opponent->GetModel(), bullets[i]->GetModel())) {
+      delete bullets[i];
+      bullets.erase(bullets.begin()+i);
       return 2;
     }
+  }
+  //check player to player collision
+  if (areWithinHittingDistance(m_player->GetModel(), m_opponent->GetModel())) {
+    return 3;
   }
   return 0;
 }

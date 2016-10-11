@@ -17,13 +17,12 @@ public:
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
-    void Update(unsigned int dt);
+    bool Update(unsigned int dt);
     void Render();
     void ShiftCamera(Direction dir);
     void Keyboard(SDL_Event sdl_event);
     void CheckBounds();
-    bool hasPlayerBeenShot();
-    bool hasOpponentBeenShot();
+    int hasPlayerBeenShot();
 
 private:
     std::string ErrorString(GLenum error);
