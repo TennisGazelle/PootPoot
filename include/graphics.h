@@ -22,6 +22,8 @@ public:
     void ShiftCamera(Direction dir);
     void Keyboard(SDL_Event sdl_event);
     void CheckBounds();
+    bool hasPlayerBeenShot();
+    bool hasOpponentBeenShot();
 
 private:
     std::string ErrorString(GLenum error);
@@ -37,11 +39,13 @@ private:
 
     // game object (will be changed out)
     Player *m_player;
+    Player *m_opponent;
 
     std::vector<Bullet*> bullets;
 
     //field area size
     int boundarySize;
+    Object *m_boundary;
 };
 
 #endif /* GRAPHICS_H */

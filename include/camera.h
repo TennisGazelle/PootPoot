@@ -15,9 +15,20 @@ public:
     void goToSideView();
     void goToTopView();
 
+    void zoomIn();
+    void zoomOut();
+
+    void recalc();
+
+    void updateFocusPoint(const glm::vec3 pFocusPoint);
+
 private:
     glm::mat4 projection;
     glm::mat4 view;
+
+    glm::vec3 _focusPoint, _cameraPosition;
+
+    
 };
 
 #endif /* CAMERA_H */

@@ -7,7 +7,9 @@ Graphics::Graphics()
 
 Graphics::~Graphics()
 {
-
+	for (int i = 0; i < bullets.size(); i++) {
+		delete bullets[i];
+	}
 }
 
 bool Graphics::Initialize(int width, int height)
@@ -46,9 +48,16 @@ bool Graphics::Initialize(int width, int height)
 
   // Create the object
   m_player = new Player();
+  m_opponent = new Player();
+
+  m_opponent->setPosition(glm::vec3(10.0, 0.0, 10.0));  
 
   //set up the sides
-  boundarySize = 10;
+  boundarySize = 25;
+  m_boundary = new Object();
+  m_boundary->Init("../models/plane.obj");
+  m_boundary->resize(glm::vec3(boundarySize));
+  m_boundary->setPosition(glm::vec3(0.0));
 
   // Set up the shaders
   m_shader = new Shader();
@@ -104,6 +113,7 @@ bool Graphics::Initialize(int width, int height)
   }
 
   m_preMultipliedMVPMatrix= m_shader->GetUniformLocation("mvpMatrix");
+
   if (m_preMultipliedMVPMatrix == INVALID_UNIFORM_LOCATION)
   {
     printf("m_preMultipliedMVPMatrix not found\n");
@@ -121,10 +131,46 @@ void Graphics::Update(unsigned int dt)
 {
   // Update the object
   m_player->update(dt);
+  m_opponent->update(dt);
   for (int i = 0; i < bullets.size(); i++) {
     bullets[i]->Update(dt);
+    if (bullets[i]->life_count <= 0) {
+      delete bullets[i];
+      bullets.erase(bullets.begin()+i);
+      i--;
+    }
   }
   CheckBounds();
+  
+  // update the camera to follow the player  
+  //m_camera->updateFocusPoint(glm::vec3(m_player->GetModel()[3]));
+
+  // opponent AI stuff
+  static unsigned int movementTimer = 0;
+  static unsigned int shootingTimer = 0;
+  static int mod = 4;
+  Direction opponentDir;
+  
+  switch(movementTimer % mod) {
+     case 0:
+       opponentDir = UP; break;
+     case 1:
+       opponentDir = DOWN; break;
+     case 2:
+       opponentDir = LEFT; break;
+     case 3:
+       opponentDir = RIGHT; break;
+  }
+
+  if (movementTimer % 100 < 7) {
+    m_opponent->moveDirection(opponentDir);
+  }
+  if (shootingTimer % 157 == 0) {
+    bullets.push_back(m_opponent->shootDirection(opponentDir));
+  }
+
+  movementTimer = rand() % 100;
+  shootingTimer++;
 }
 
 void Graphics::Render()
@@ -142,11 +188,16 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
   glm::mat4 mvp;
 
+  // do the same thing for the box rendering
+  mvp = m_camera->GetProjection() * m_camera->GetView() * m_boundary->GetModel(); 
+  glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
+  m_boundary->Render();
+
   for (int i = 0; i < bullets.size(); i++) {
     // Send in premultiplied matrix to shader
     mvp = m_camera->GetProjection() * m_camera->GetView() * bullets[i]->GetModel(); 
     glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
-
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bullets[i]->GetModel()));
     bullets[i]->Render();  
   }
@@ -154,16 +205,22 @@ void Graphics::Render()
   // Send in premultiplied matrix to shader
   mvp = m_camera->GetProjection() * m_camera->GetView() * m_player->GetModel(); 
   glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
-
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_player->GetModel()));
   m_player->Render();  
 
+  //do the same thing for the opponent rendering
+  mvp = m_camera->GetProjection() * m_camera->GetView() * m_opponent->GetModel(); 
+  glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_opponent->GetModel()));
+  m_opponent->Render();  
+ 
 
   // Get any errors from OpenGL
   auto error = glGetError();
   if ( error != GL_NO_ERROR )
   {
     string val = ErrorString( error );
+
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
 }
@@ -172,13 +229,13 @@ void Graphics::ShiftCamera(Direction dir) {
   switch (dir) {
     case DOWN:
       m_camera->goToFrontView();
-        break;
+      break;
     case UP:
       m_camera->goToTopView();
-        break;
+      break;
     case RIGHT:
       m_camera->goToSideView();
-        break;
+      break;
     default:
       break;
   }
@@ -187,6 +244,7 @@ void Graphics::ShiftCamera(Direction dir) {
 void Graphics::Keyboard(SDL_Event sdl_event) {
   switch (sdl_event.key.keysym.sym) {
     case SDLK_UP:
+
       m_player->moveDirection(UP);
       break;
     case SDLK_DOWN:
@@ -195,6 +253,7 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
     case SDLK_RIGHT:
       m_player->moveDirection(RIGHT);
       break;
+
     case SDLK_LEFT:
       m_player->moveDirection(LEFT);
       break;
@@ -210,6 +269,13 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
     case SDLK_d:
       bullets.push_back(m_player->shootDirection(RIGHT));
       break;
+
+    case SDLK_KP_PLUS:
+      m_camera->zoomIn();
+      break;
+    case SDLK_KP_MINUS:
+      m_camera->zoomOut();
+     break;
     default:
       break;
   }
@@ -236,7 +302,6 @@ std::string Graphics::ErrorString(GLenum error)
   {
     return "GL_INVALID_FRAMEBUFFER_OPERATION: The framebuffer object is not complete.";
   }
-
   else if(error == GL_OUT_OF_MEMORY)
   {
     return "GL_OUT_OF_MEMORY: There is not enough memory left to execute the command.";
@@ -251,16 +316,43 @@ void Graphics::CheckBounds() {
   // if the bullet goes outside, or if the player goes outside the
   // boundaries, force them back to the opposite side
   glm::vec4 position;
+
   for (int i = 0; i < bullets.size(); i++) {
     position = bullets[i]->GetModel()[3];
-    
+
     if (position.x > boundarySize) position.x = -boundarySize;
     else if (position.x < -boundarySize) position.x = boundarySize;
-
     if (position.z > boundarySize) position.z = -boundarySize;
     else if (position.z < -boundarySize) position.z = boundarySize;
     
     bullets[i]->setPosition(glm::vec3(position));    
   }
+  
+  // FOR THE OPPONENT
+  position = m_opponent->GetModel()[3];
+  if (position.x > boundarySize) position.x = -boundarySize;
+  else if (position.x < -boundarySize) position.x = boundarySize;
+  if (position.z > boundarySize) position.z = -boundarySize;
+  else if (position.z < -boundarySize) position.z = boundarySize;
+  m_opponent->setPosition(glm::vec3(position));
+
+  // FOR THE PLAYER
+  position = m_player->GetModel()[3];
+  if (position.x > boundarySize) position.x = -boundarySize;
+  else if (position.x < -boundarySize) position.x = boundarySize;
+  if (position.z > boundarySize) position.z = -boundarySize;
+  else if (position.z < -boundarySize) position.z = boundarySize;
+  m_player->setPosition(glm::vec3(position));
+
 }
 
+bool Graphics::hasPlayerBeenShot() {
+  for (int i = 0; i < bullets.size(); i++) {
+    if (hasTwoObjectsHit((Object*)m_player, (Object*)bullets[i])) {
+      return 1;
+    } else if (hasTwoObjectsHit((Object*)m_opponent, (Object*)bullets[i])) {
+      return 2;
+    }
+  }
+  return 0;
+}

@@ -30,6 +30,7 @@ public:
 
     glm::mat4 GetModel();
     void setPosition(glm::vec3 pPosition);
+    void resize(glm::vec3 pResizingFactor);
 
 protected:
     glm::mat4 _model;
@@ -43,5 +44,7 @@ private:
     //irrelevant now
     float _angle;
 };
+
+bool hasTwoObjectsHit(Object* first, Object* second);
 
 #endif /* OBJECT_H */

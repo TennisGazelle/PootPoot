@@ -14,6 +14,7 @@ Bullet::Bullet(glm::vec3 pDirection, glm::vec3 pInitialPosition) {
   }
   _velocityVector = pDirection;
   _model[3] = glm::vec4(pInitialPosition, _model[3][3]);
+  life_count = 500;
 }
 
 Bullet::~Bullet(){
@@ -24,6 +25,8 @@ void Bullet::Update(unsigned int dt) {
   glm::vec3 position = glm::vec3(_model[3]);
   position += float(dt) * _velocityVector;
   _model[3] = glm::vec4(position, _model[3][3]);
+  
+  life_count--;
 }
 
 void Bullet::render() {

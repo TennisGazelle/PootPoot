@@ -25,8 +25,7 @@ void Object::Init(const std::string& filename) {
 
 void Object::Update(unsigned int dt)
 {
-  //_angle = dt * M_PI/1000;
-  //_model = glm::rotate(_model, (_angle), glm::vec3(0.0, 1.0, 0.0));
+
 }
 
 glm::mat4 Object::GetModel()
@@ -36,6 +35,10 @@ glm::mat4 Object::GetModel()
 
 void Object::setPosition(glm::vec3 pPosition) {
   _model[3] = glm::vec4(pPosition, _model[3][3]);
+}
+
+void Object::resize(glm::vec3 pResizingFactor) {
+  _model = glm::scale(_model, pResizingFactor);
 }
 
 void Object::Render()
@@ -126,4 +129,9 @@ void Object::LoadVerticiesFromFile(const std::string& filename) {
   }
   _indices = line_indices;
   */
+}
+
+bool hasTwoObjectsHit(Object* first, Object* second) {
+  glm::vec3 distanceBetweenTwo = glm::vec3(first->GetModel()[3] - second->GetModel()[3]);
+  return abs(distanceBetweenTwo.length()) <= 0.1;
 }

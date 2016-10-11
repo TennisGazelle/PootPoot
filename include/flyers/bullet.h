@@ -12,6 +12,8 @@ public:
 	void Update(unsigned int dt);
 	void render();
 
+	int life_count;
+
 private:
 	glm::vec3 _velocityVector;
 
@@ -20,6 +22,7 @@ private:
 	static std::vector<unsigned int> _indices;
 	static GLuint _V_BO;
 	static GLuint _I_BO;
+
 };
 
 #endif

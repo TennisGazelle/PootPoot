@@ -26,5 +26,7 @@
 #include "vertex.h"
 #include "direction.h"
 
+static const glm::vec3 GLOBAL_UP = glm::vec3(0.0,1.0,0.0);
+
 
 #endif /* GRAPHICS_HEADERS_H */
