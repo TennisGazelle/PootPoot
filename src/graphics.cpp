@@ -211,7 +211,7 @@ void Graphics::Render()
 
   // do the same thing for the box rendering
   mvp = m_camera->GetProjection() * m_camera->GetView() * m_boundary->GetModel(); 
-  glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
+  glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
   m_boundary->Render();
 

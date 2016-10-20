@@ -3,6 +3,11 @@
 
 #include "object.h"
 
+struct BulletInfo {
+	unsigned int life_count;
+	glm::mat4 indiv_model;
+};
+
 class Bullet : public Object {
 public:
 	Bullet(glm::vec3 pDirection, glm::vec3 pInitialPosition);

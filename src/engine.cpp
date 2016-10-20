@@ -48,6 +48,7 @@ bool Engine::Initialize()
     printf("The graphics failed to initialize.\n");
     return false;
   }
+  m_graphics->ShiftCamera(UP);
 
   // start the joystick configuration
   // count num of joysticks
