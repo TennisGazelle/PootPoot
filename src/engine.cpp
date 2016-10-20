@@ -21,6 +21,12 @@ Engine::~Engine()
 {
   delete m_window;
   delete m_graphics;
+  //if the joystick has been opened, close it!
+  //if (SDL_JoystickOpened(SDL_JoystickIndex(m_joystick))) 
+  {
+    SDL_JoystickClose(m_joystick);
+  }
+  m_joystick = NULL;
   m_window = NULL;
   m_graphics = NULL;
 }
@@ -42,6 +48,20 @@ bool Engine::Initialize()
     printf("The graphics failed to initialize.\n");
     return false;
   }
+
+  // start the joystick configuration
+  // count num of joysticks
+  if (SDL_NumJoysticks() > 0){
+    m_joystick = SDL_JoystickOpen(0);
+  }
+
+  if (m_joystick) {
+    std::cout << "num axes: " << SDL_JoystickNumAxes(m_joystick) << std::endl;
+    std::cout << "num buttons: " << SDL_JoystickNumButtons(m_joystick) << std::endl;
+  } else if (SDL_NumJoysticks() > 0) {
+    printf("There was a joystick detected, but it failed to connect");
+  }
+
 
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
@@ -102,6 +122,21 @@ void Engine::Keyboard()
 				m_graphics->Keyboard(m_event);
 				break;
 		}
+  }
+  else if (m_event.type == SDL_JOYAXISMOTION){
+    if (m_event.jaxis.value < -3200) {
+      if (m_event.jaxis.axis == 0) {
+        printf("we moved left\n");
+      } else { // it equals '1'
+        printf("we moved up\n");
+      }
+    } else if (m_event.jaxis.value > 3200) {
+      if (m_event.jaxis.axis == 0) {
+        printf("we moved right\n");
+      } else {
+        printf("we moved down\n");
+      }
+    }
   }
 }
 

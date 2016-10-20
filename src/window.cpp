@@ -16,7 +16,7 @@ Window::~Window()
 bool Window::Initialize(const string &name, int* width, int* height)
 {
     // Start SDL
-  if(SDL_Init(SDL_INIT_VIDEO) < 0)
+  if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
   {
     printf("SDL failed to initialize: %s\n", SDL_GetError());
     return false;

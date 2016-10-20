@@ -298,6 +298,7 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
       m_camera->zoomOut();
      break;
     default:
+      std::cout << "invalid button input: " << sdl_event.key.keysym.sym << std::endl;
       break;
   }
 }
