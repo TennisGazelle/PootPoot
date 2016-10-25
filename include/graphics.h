@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "object.h"
 #include "flyers/player.h"
+#include "flyers/bullet_holder.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ private:
     Player *m_player;
     Player *m_opponent;
 
-    std::vector<Bullet*> bullets;
+    BulletHolder bulletHolder;
 
     //field area size
     int boundarySize;

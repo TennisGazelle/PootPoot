@@ -7,9 +7,7 @@ Graphics::Graphics()
 
 Graphics::~Graphics()
 {
-	for (int i = 0; i < bullets.size(); i++) {
-		delete bullets[i];
-	}
+
 }
 
 bool Graphics::Initialize(int width, int height)
@@ -47,17 +45,19 @@ bool Graphics::Initialize(int width, int height)
   }
 
   // Create the object
-  m_player = new Player();
-  m_opponent = new Player();
+  m_player = new Player(&bulletHolder);
+  m_opponent = new Player(&bulletHolder);
 
   m_opponent->setPosition(glm::vec3(10.0, 0.0, 10.0));  
 
-  //set up the sides
+  // set up the sides
   boundarySize = 25;
   m_boundary = new Object();
   m_boundary->Init("../models/plane.obj");
   m_boundary->resize(glm::vec3(boundarySize));
   m_boundary->setPosition(glm::vec3(0.0));
+
+  // set up the bullet holder
 
   // Set up the shaders
   m_shader = new Shader();
@@ -129,17 +129,14 @@ bool Graphics::Initialize(int width, int height)
 
 bool Graphics::Update(unsigned int dt)
 {
+
+
   // Update the object
   m_player->update(dt);
   m_opponent->update(dt);
-  for (int i = 0; i < bullets.size(); i++) {
-    bullets[i]->Update(dt);
-    if (bullets[i]->life_count <= 0) {
-      delete bullets[i];
-      bullets.erase(bullets.begin()+i);
-      i--;
-    }
-  }
+
+  bulletHolder.Update(dt);
+
   CheckBounds();
   
   // update the camera to follow the player  
@@ -186,7 +183,7 @@ bool Graphics::Update(unsigned int dt)
     m_opponent->moveDirection(opponentDir);
   }
   if (shootingTimer % 157 == 0) {
-    bullets.push_back(m_opponent->shootDirection(opponentDir));
+    m_opponent->shootDirection(opponentDir);
   }
 
   movementTimer = rand() % 100;
@@ -215,12 +212,12 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
   m_boundary->Render();
 
-  for (int i = 0; i < bullets.size(); i++) {
+  for (int i = 0; i < bulletHolder.getSize(); i++) {
     // Send in premultiplied matrix to shader
-    mvp = m_camera->GetProjection() * m_camera->GetView() * bullets[i]->GetModel(); 
+    mvp = m_camera->GetProjection() * m_camera->GetView() * bulletHolder.GetModelAt(i); 
     glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bullets[i]->GetModel()));
-    bullets[i]->Render();  
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bulletHolder.GetModelAt(i)));
+    bulletHolder.Render(i);
   }
 
   // Send in premultiplied matrix to shader
@@ -265,7 +262,6 @@ void Graphics::ShiftCamera(Direction dir) {
 void Graphics::Keyboard(SDL_Event sdl_event) {
   switch (sdl_event.key.keysym.sym) {
     case SDLK_UP:
-
       m_player->moveDirection(UP);
       break;
     case SDLK_DOWN:
@@ -279,16 +275,16 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
       m_player->moveDirection(LEFT);
       break;
     case SDLK_w:
-      bullets.push_back(m_player->shootDirection(UP));
+      m_player->shootDirection(UP);
       break;
     case SDLK_a:
-      bullets.push_back(m_player->shootDirection(LEFT));
+      m_player->shootDirection(LEFT);
       break;
     case SDLK_s:
-      bullets.push_back(m_player->shootDirection(DOWN));
+      m_player->shootDirection(DOWN);
       break;
     case SDLK_d:
-      bullets.push_back(m_player->shootDirection(RIGHT));
+      m_player->shootDirection(RIGHT);
       break;
 
     case SDLK_KP_PLUS:
@@ -338,21 +334,10 @@ void Graphics::CheckBounds() {
   // if the bullet goes outside, or if the player goes outside the
 
   // boundaries, force them back to the opposite side
-  glm::vec4 position;
-
-  for (int i = 0; i < bullets.size(); i++) {
-    position = bullets[i]->GetModel()[3];
-
-    if (position.x > boundarySize) position.x = -boundarySize;
-    else if (position.x < -boundarySize) position.x = boundarySize;
-    if (position.z > boundarySize) position.z = -boundarySize;
-    else if (position.z < -boundarySize) position.z = boundarySize;
-    
-    bullets[i]->setPosition(glm::vec3(position));    
-  }
+  bulletHolder.checkBounds(boundarySize);
   
   // FOR THE OPPONENT
-  position = m_opponent->GetModel()[3];
+  glm::vec4 position = m_opponent->GetModel()[3];
   if (position.x > boundarySize) position.x = -boundarySize;
   else if (position.x < -boundarySize) position.x = boundarySize;
   if (position.z > boundarySize) position.z = -boundarySize;
@@ -375,16 +360,16 @@ bool areWithinHittingDistance(glm::mat4 first, glm::mat4 second) {
 }
 
 int Graphics::hasPlayerBeenShot() {
-  for (int i = 0; i < bullets.size(); i++) {
-    if (areWithinHittingDistance(m_player->GetModel(), bullets[i]->GetModel())) {
-      delete bullets[i];
-      bullets.erase(bullets.begin()+i);
-      return 1;
-    } else if (areWithinHittingDistance(m_opponent->GetModel(), bullets[i]->GetModel())) {
-      delete bullets[i];
-      bullets.erase(bullets.begin()+i);
-      return 2;
-    }
+  int offenderIndex = bulletHolder.checkForCollision(m_player->GetModel());
+  if (offenderIndex != -1) {
+    bulletHolder.destroyBullet(offenderIndex);
+    return 1;
+  }
+
+  offenderIndex = bulletHolder.checkForCollision(m_opponent->GetModel());
+  if (offenderIndex != -1) {
+    bulletHolder.destroyBullet(offenderIndex);
+    return 2;
   }
   //check player to player collision
   if (areWithinHittingDistance(m_player->GetModel(), m_opponent->GetModel())) {

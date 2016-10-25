@@ -1,7 +1,7 @@
 #ifndef __BULLET_H_
 #define __BULLET_H_
 
-#include "object.h"
+#include "../object.h"
 
 struct BulletInfo {
 	unsigned int life_count;

@@ -4,12 +4,12 @@
 #include <vector>
 
 #include "flyer.h"
-#include "bullet.h"
+#include "bullet_holder.h"
 
 
 class Player : public Flyer {
 public:
-	Player();
+	Player(BulletHolder* pBulletHolderPtr);
 	~Player();
 	
 	//overloaded inhereted objects
@@ -17,13 +17,14 @@ public:
 	void Render();
 	
 	void moveDirection(Direction dir);
-	Bullet* shootDirection(Direction dir);
+	void shootDirection(Direction dir);
 
 	int getHealth() const;
 	void decrementHealth();
 
 private:	
 	int health;
+	BulletHolder* bulletHolderPtr;
 
 };
 
