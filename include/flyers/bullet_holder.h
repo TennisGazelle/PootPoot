@@ -6,7 +6,7 @@
 struct BulletInfo {
 	unsigned int life_count;
 	glm::mat4 model;
-	glm::vec3 direction;
+	glm::vec4 direction;
 };
 
 class BulletHolder {
