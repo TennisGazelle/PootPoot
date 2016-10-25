@@ -41,11 +41,15 @@ private:
     Player *m_player;
     Player *m_opponent;
 
-    BulletHolder bulletHolder;
+    BulletHolder *bulletHolder;
 
     //field area size
     int boundarySize;
     Object *m_boundary;
+
+    enum GameState {
+        RUNNING, EXIT
+    } gameState = RUNNING;
 };
 
 #endif /* GRAPHICS_H */

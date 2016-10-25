@@ -40,7 +40,6 @@ bool Engine::Initialize()
     printf("The window failed to initialize.\n");
     return false;
   }
-
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT))
@@ -119,6 +118,10 @@ void Engine::Keyboard()
 			case SDLK_7:
 				m_graphics->ShiftCamera(UP);
 				break;
+      case SDLK_9:
+      case SDLK_x:
+        m_running = false;
+        break;
 			default:
 				m_graphics->Keyboard(m_event);
 				break;

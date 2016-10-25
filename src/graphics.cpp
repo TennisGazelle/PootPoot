@@ -44,9 +44,12 @@ bool Graphics::Initialize(int width, int height)
     return false;
   }
 
+  //set up the holder
+  bulletHolder = new BulletHolder();
+
   // Create the object
-  m_player = new Player(&bulletHolder);
-  m_opponent = new Player(&bulletHolder);
+  m_player = new Player(bulletHolder);
+  m_opponent = new Player(bulletHolder);
 
   m_opponent->setPosition(glm::vec3(10.0, 0.0, 10.0));  
 
@@ -58,7 +61,6 @@ bool Graphics::Initialize(int width, int height)
   m_boundary->setPosition(glm::vec3(0.0));
 
   // set up the bullet holder
-
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -129,18 +131,21 @@ bool Graphics::Initialize(int width, int height)
 
 bool Graphics::Update(unsigned int dt)
 {
-
-
   // Update the object
   m_player->update(dt);
   m_opponent->update(dt);
 
-  bulletHolder.Update(dt);
+  bulletHolder->Update(dt);
 
   CheckBounds();
   
   // update the camera to follow the player  
   //m_camera->updateFocusPoint(glm::vec3(m_player->GetModel()[3]));
+
+  // kill the game if the keyboard said so
+  if (gameState == EXIT) {
+    return false;
+  }
 
   // kill the game if/when there's a bullet hitting the player
   int shot = this->hasPlayerBeenShot();
@@ -161,7 +166,6 @@ bool Graphics::Update(unsigned int dt)
     std::cout << "You Won!" << std::endl;
     return false;
   }
-
   // opponent AI stuff
   static unsigned int movementTimer = 0;
   static unsigned int shootingTimer = 0;
@@ -183,7 +187,7 @@ bool Graphics::Update(unsigned int dt)
     m_opponent->moveDirection(opponentDir);
   }
   if (shootingTimer % 157 == 0) {
-    m_opponent->shootDirection(opponentDir);
+    //m_opponent->shootDirection(opponentDir);
   }
 
   movementTimer = rand() % 100;
@@ -212,12 +216,12 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_boundary->GetModel()));
   m_boundary->Render();
 
-  for (int i = 0; i < bulletHolder.getSize(); i++) {
+  for (int i = 0; i < bulletHolder->getSize(); i++) {
     // Send in premultiplied matrix to shader
-    mvp = m_camera->GetProjection() * m_camera->GetView() * bulletHolder.GetModelAt(i); 
+    mvp = m_camera->GetProjection() * m_camera->GetView() * bulletHolder->GetModelAt(i); 
     glUniformMatrix4fv(m_preMultipliedMVPMatrix, 1, GL_FALSE, glm::value_ptr(mvp));
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bulletHolder.GetModelAt(i)));
-    bulletHolder.Render(i);
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bulletHolder->GetModelAt(i)));
+    bulletHolder->Render(i);
   }
 
   // Send in premultiplied matrix to shader
@@ -270,10 +274,10 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
     case SDLK_RIGHT:
       m_player->moveDirection(RIGHT);
       break;
-
     case SDLK_LEFT:
       m_player->moveDirection(LEFT);
       break;
+
     case SDLK_w:
       m_player->shootDirection(UP);
       break;
@@ -286,6 +290,8 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
     case SDLK_d:
       m_player->shootDirection(RIGHT);
       break;
+    case SDLK_x:
+      gameState = EXIT;
 
     case SDLK_KP_PLUS:
       m_camera->zoomIn();
@@ -334,7 +340,7 @@ void Graphics::CheckBounds() {
   // if the bullet goes outside, or if the player goes outside the
 
   // boundaries, force them back to the opposite side
-  bulletHolder.checkBounds(boundarySize);
+  bulletHolder->checkBounds(boundarySize);
   
   // FOR THE OPPONENT
   glm::vec4 position = m_opponent->GetModel()[3];
@@ -360,15 +366,15 @@ bool areWithinHittingDistance(glm::mat4 first, glm::mat4 second) {
 }
 
 int Graphics::hasPlayerBeenShot() {
-  int offenderIndex = bulletHolder.checkForCollision(m_player->GetModel());
+  int offenderIndex = bulletHolder->checkForCollision(m_player->GetModel());
   if (offenderIndex != -1) {
-    bulletHolder.destroyBullet(offenderIndex);
+    bulletHolder->destroyBullet(offenderIndex);
     return 1;
   }
 
-  offenderIndex = bulletHolder.checkForCollision(m_opponent->GetModel());
+  offenderIndex = bulletHolder->checkForCollision(m_opponent->GetModel());
   if (offenderIndex != -1) {
-    bulletHolder.destroyBullet(offenderIndex);
+    bulletHolder->destroyBullet(offenderIndex);
     return 2;
   }
   //check player to player collision
