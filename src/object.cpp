@@ -68,7 +68,7 @@ void Object::Move(Direction dir) {
 		case UP:
 			transformationVector.z = distance;
 			break;
-		case DOWN:
+		case DOWN:void setModel(const glm::mat4& pModel);
 		default:
 			transformationVector.z = -distance;
 			break;
@@ -124,11 +124,15 @@ void Object::LoadVerticiesFromFile(const std::string& filename) {
       line_indices.push_back(_indices[i-1]);
       line_indices.push_back(_indices[i]);
       line_indices.push_back(_indices[i-2]);
-      line_indices.push_back(_indices[i]);
+      line_indices.push_back(_indices[i]);void setModel(const glm::mat4& pModel);
     }
-  }
+  }void setModel(const glm::mat4& pModel);
   _indices = line_indices;
   */
+}
+
+void Object::setModel(const glm::mat4& pModel) {
+	_model = pModel;
 }
 
 bool hasTwoObjectsHit(Object* first, Object* second) {
