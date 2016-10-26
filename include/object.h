@@ -31,6 +31,7 @@ public:
     glm::mat4 GetModel();
     void setPosition(glm::vec3 pPosition);
     void resize(glm::vec3 pResizingFactor);
+    void setModel(const glm::mat4& pModel);
 
 protected:
     glm::mat4 _model;
