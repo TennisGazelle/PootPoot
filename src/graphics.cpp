@@ -187,7 +187,7 @@ bool Graphics::Update(unsigned int dt)
     m_opponent->moveDirection(opponentDir);
   }
   if (shootingTimer % 157 == 0) {
-    //m_opponent->shootDirection(opponentDir);
+    m_opponent->shootDirection(opponentDir);
   }
 
   movementTimer = rand() % 100;

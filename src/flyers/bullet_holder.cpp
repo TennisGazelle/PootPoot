@@ -20,9 +20,8 @@ void BulletHolder::Update(unsigned int dt) {
 	// go through all the bullet's' and update where
 	// they should be going
 	for (unsigned int i = 0; i < bullets.size(); i++) {
-		bullets[i].model[3] += bullets[i].direction;
+		bullets[i].model[3] += 50.0f * bullets[i].direction;
 		bullets[i].life_count--;
-		std::cout << "life count for bullet: " << i << " is now: " << bullets[i].life_count << std::endl;
 		if (bullets[i].life_count <= 0) {
 			this->destroyBullet(i);
 			i--;
@@ -39,8 +38,7 @@ void BulletHolder::Render(unsigned int index) {
 }
 
 glm::mat4 BulletHolder::GetModelAt(unsigned int index) {
-	return glm::mat4(1.0f);
-	//return index >= bullets.size() ? glm::mat4(1.0f) : bullets[index].model; //return what would be the model matrix for that index
+	return index >= bullets.size() ? glm::mat4(1.0f) : bullets[index].model; //return what would be the model matrix for that index
 }
 
 void BulletHolder::makeNewBullet(glm::vec3 pDirection, glm::vec3 pInitialPosition) {
@@ -48,16 +46,8 @@ void BulletHolder::makeNewBullet(glm::vec3 pDirection, glm::vec3 pInitialPositio
 	BulletInfo bulletInfo = {
 		50, glm::mat4(1.0f), glm::vec4(pDirection, 0.0f) 
 	};
-	bulletInfo.model[3] = glm::vec4(pInitialPosition+(10.0f*pDirection), bulletInfo.model[3][3]);
+	bulletInfo.model[3] = glm::vec4(pInitialPosition+(100.0f*pDirection), bulletInfo.model[3][3]);
 	bullets.push_back(bulletInfo);
-
-for (int i = 0; i < 4; i++) {
-	for (int j = 0; j < 4; j++) {
-		std::cout << bulletInfo.model[i][j] << " ";
-	}
-	std::cout << std::endl;
-}
-
 }
 
 void BulletHolder::destroyBullet(unsigned int index) {
