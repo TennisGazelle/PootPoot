@@ -66,7 +66,7 @@ int BulletHolder::checkForCollision(const glm::mat4& otherObject) {
 	return -1;
 }
 
-void BulletHolder::checkBounds(unsigned int boundary) {
+void BulletHolder::checkBounds(int boundary) {
 	glm::vec4 position;
 
 	for (int i = 0; i < bullets.size(); i++) {

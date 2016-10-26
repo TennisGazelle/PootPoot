@@ -35,7 +35,7 @@ public:
 
 	// if the bullet goes outside the "space" designated by 
 	// the boundary, force them back to the opposite side
-	void checkBounds(unsigned int boundary);
+	void checkBounds(int boundary);
 
 	unsigned int getSize() const;
 	
