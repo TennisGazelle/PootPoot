@@ -19,7 +19,7 @@ public:
 	Animator();
 	~Animator();
 
-	void setAnimationType(AnimationType pAnimationType, unsigned int duration);
+	void setAnimationType(AnimationType pAnimationType, unsigned int pDuration);
 	void setTargetTransformations(const glm::mat4& begin, const glm::mat4& end);
 
 	glm::mat4 getTransAt(unsigned int index);
@@ -27,6 +27,7 @@ public:
 private:
 	std::vector<glm::mat4> frames;
 	AnimationType animationType;
+	unsigned int duration;
 };
 
 #endif
