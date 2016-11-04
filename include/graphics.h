@@ -18,14 +18,20 @@ public:
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height);
+    
+    // master function that will call all appropriate subfuncitons
     bool Update(unsigned int dt);
+    virtual bool UpdatePlayers(unsigned int dt);
+    virtual bool UpdateAIOpponent(unsigned int dt);
+    virtual bool UpdateScore(unsigned int dt);
+
     void Render();
     void ShiftCamera(Direction dir);
     void Keyboard(SDL_Event sdl_event);
     void CheckBounds();
     int hasPlayerBeenShot();
 
-private:
+protected:
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
@@ -48,7 +54,7 @@ private:
     Object *m_boundary;
 
     enum GameState {
-        RUNNING, EXIT
+        MAIN_MENU, SCOREBOARD, RUNNING, EXIT
     } gameState = RUNNING;
 };
 

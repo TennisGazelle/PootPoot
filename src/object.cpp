@@ -65,11 +65,12 @@ void Object::Move(Direction dir) {
 	glm::vec3 transformationVector(0.0f);
 	
 	switch (dir) {
-		case UP:
-			transformationVector.z = distance;
-			break;
-		case DOWN:void setModel(const glm::mat4& pModel);
 		default:
+      break;
+    case UP:
+      transformationVector.z = distance;
+      break;
+    case DOWN:
 			transformationVector.z = -distance;
 			break;
 		case RIGHT:
@@ -135,7 +136,3 @@ void Object::setModel(const glm::mat4& pModel) {
 	_model = pModel;
 }
 
-bool hasTwoObjectsHit(Object* first, Object* second) {
-  glm::vec3 distanceBetweenTwo = glm::vec3(first->GetModel()[3] - second->GetModel()[3]);
-  return abs(distanceBetweenTwo.length()) <= 2.0;
-}

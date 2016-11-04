@@ -48,8 +48,8 @@ void Flyer::applyForce(glm::vec3 pAccel) {
 	_accelerationVector += pAccel;
 }
 
-float angleBetweenTwoVectors(glm::vec3 first, glm::vec3 second) {
-	return acos(glm::dot(first, second)/(first.length() * second.length())) * 0.01;
+float angleBetweenTwoVectors(const glm::vec3& first, const glm::vec3& second) {
+	return acos(glm::dot(first, second)/(first.length() * second.length())) * M_PI / 180.0f;
 	//return acos(glm::dot(first, second));
 }
 
@@ -59,17 +59,12 @@ void Flyer::update(unsigned int dt) {
 	positionVector += (0.5f * float(dt * dt) * _accelerationVector);
 	positionVector += (float(dt) * _velocityVector);
 
-	glm::vec3 preRotateVector = _velocityVector;
-
 	//update those parameters
 	_velocityVector += float(dt) * _accelerationVector;
 	_velocityVector *= 0.94;
 	_accelerationVector *= 0.1;
 
-	float turn = angleBetweenTwoVectors(preRotateVector, _velocityVector);
-
 	//change position and otherwise
-	_model = glm::rotate(_model, turn, glm::vec3(0.0,1.0,0.0));
 	_model[3] = glm::vec4(positionVector, _model[3][3]);
 }
 
@@ -77,4 +72,10 @@ void Flyer::render() {
 	Object::Render();
 }
 
+glm::mat4 Flyer::GetModel() {
+	static float turn = 0.0f;
+	turn += angleBetweenTwoVectors(glm::vec3(0,1,0), _velocityVector);
+	glm::mat4 rTransform = glm::rotate(glm::mat4(1.0f), turn, glm::vec3(0.0,1.0,0.0));
+	return _model * rTransform;
+}
 #endif

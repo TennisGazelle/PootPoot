@@ -129,43 +129,35 @@ bool Graphics::Initialize(int width, int height)
   return true;
 }
 
+
 bool Graphics::Update(unsigned int dt)
 {
+
+  switch (gameState) {
+    case RUNNING:
+      UpdatePlayers(dt);
+      CheckBounds();
+      UpdateAIOpponent(dt);
+      UpdateScore(dt);
+      return true;
+      break;
+
+    case EXIT:
+    default:
+      return false;
+      break;
+  }
+}
+
+bool Graphics::UpdatePlayers(unsigned int dt) {
   // Update the object
   m_player->update(dt);
   m_opponent->update(dt);
 
   bulletHolder->Update(dt);
+}
 
-  CheckBounds();
-  
-  // update the camera to follow the player  
-  //m_camera->updateFocusPoint(glm::vec3(m_player->GetModel()[3]));
-
-  // kill the game if the keyboard said so
-  if (gameState == EXIT) {
-    return false;
-  }
-
-  // kill the game if/when there's a bullet hitting the player
-  int shot = this->hasPlayerBeenShot();
-  if (shot == 1 || shot == 3) {
-    m_player->decrementHealth();
-    std::cout << "player health is now: " << m_player->getHealth() << std::endl;
-  }
-  if (shot == 2 || shot == 3) {
-    m_opponent->decrementHealth();
-    std::cout << "opponent health is now: " << m_opponent->getHealth() << std::endl;
-  }
-
-  if (m_player->getHealth() <= 0) {
-    std::cout << "You lost!" << std::endl;
-    return false;    
-  }
-  if (m_opponent->getHealth() <= 0) {
-    std::cout << "You Won!" << std::endl;
-    return false;
-  }
+bool Graphics::UpdateAIOpponent(unsigned int dt) {
   // opponent AI stuff
   static unsigned int movementTimer = 0;
   static unsigned int shootingTimer = 0;
@@ -192,8 +184,30 @@ bool Graphics::Update(unsigned int dt)
 
   movementTimer = rand() % 100;
   shootingTimer++;
+}
+
+bool Graphics::UpdateScore(unsigned int dt) {
+  int shot = this->hasPlayerBeenShot();
+  if (shot == 1 || shot == 3) {
+    m_player->decrementHealth();
+    std::cout << "player health is now: " << m_player->getHealth() << std::endl;
+  }
+  if (shot == 2 || shot == 3) {
+    m_opponent->decrementHealth();
+    std::cout << "opponent health is now: " << m_opponent->getHealth() << std::endl;
+  }
+
+  if (m_player->getHealth() <= 0) {
+    std::cout << "You lost!" << std::endl;
+    return false;    
+  }
+  if (m_opponent->getHealth() <= 0) {
+    std::cout << "You Won!" << std::endl;
+    return false;
+  }
   return true;
 }
+
 
 void Graphics::Render()
 {

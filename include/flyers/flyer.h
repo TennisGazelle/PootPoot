@@ -24,6 +24,9 @@ public:
 	void update(unsigned int dt);
 	void render();
 
+	// overload a getter for orientation optimization
+	glm::mat4 GetModel();
+
 private:
 	glm::vec3 _accelerationVector;
 	glm::vec3 _velocityVector;
