@@ -22,10 +22,10 @@ Engine::~Engine()
   delete m_window;
   delete m_graphics;
   //if the joystick has been opened, close it!
-  //if (SDL_JoystickOpened(SDL_JoystickIndex(m_joystick))) 
-  {
-    SDL_JoystickClose(m_joystick);
-  }
+  std::cout << "inside engine destructor" << std::endl;
+  //if (SDL_JoystickOpened(SDL_JoystickIndex(m_joystick))) {
+  //  SDL_JoystickClose(m_joystick);
+  //}
   m_joystick = NULL;
   m_window = NULL;
   m_graphics = NULL;

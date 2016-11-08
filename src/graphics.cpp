@@ -291,47 +291,65 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
         m_player->moveDirection(DOWN);
       }
     }
+  } else if (sdl_event.type == SDL_JOYBUTTONDOWN) {
+    switch(sdl_event.jbutton.button) {
+      case 0:
+        m_player->shootDirection(RIGHT);
+        break;
+      case 1:
+        m_player->moveDirection(DOWN);
+        break;
+      case 2:
+        m_player->shootDirection(UP);
+        break;
+      case 3:
+        m_player->shootDirection(LEFT);
+        break;
+      default:
+        break;
+    }
+  } else {  
+    switch (sdl_event.key.keysym.sym) {
+      case SDLK_UP:
+        m_player->moveDirection(UP);
+        break;
+      case SDLK_DOWN:
+        m_player->moveDirection(DOWN);
+        break;
+      case SDLK_RIGHT:
+        m_player->moveDirection(RIGHT);
+        break;
+      case SDLK_LEFT:
+        m_player->moveDirection(LEFT);
+        break;
+
+      case SDLK_w:
+        m_player->shootDirection(UP);
+        break;
+      case SDLK_a:
+        m_player->shootDirection(LEFT);
+        break;
+      case SDLK_s:
+        m_player->shootDirection(DOWN);
+        break;
+      case SDLK_d:
+        m_player->shootDirection(RIGHT);
+        break;
+      case SDLK_x:
+        gameState = EXIT;
+
+      case SDLK_KP_PLUS:
+        m_camera->zoomIn();
+        break;
+      case SDLK_KP_MINUS:
+        m_camera->zoomOut();
+       break;
+      default:
+        std::cout << "invalid button input: " << sdl_event.key.keysym.sym << std::endl;
+        break;
+    }
   }
 
-  switch (sdl_event.key.keysym.sym) {
-    case SDLK_UP:
-      m_player->moveDirection(UP);
-      break;
-    case SDLK_DOWN:
-      m_player->moveDirection(DOWN);
-      break;
-    case SDLK_RIGHT:
-      m_player->moveDirection(RIGHT);
-      break;
-    case SDLK_LEFT:
-      m_player->moveDirection(LEFT);
-      break;
-
-    case SDLK_w:
-      m_player->shootDirection(UP);
-      break;
-    case SDLK_a:
-      m_player->shootDirection(LEFT);
-      break;
-    case SDLK_s:
-      m_player->shootDirection(DOWN);
-      break;
-    case SDLK_d:
-      m_player->shootDirection(RIGHT);
-      break;
-    case SDLK_x:
-      gameState = EXIT;
-
-    case SDLK_KP_PLUS:
-      m_camera->zoomIn();
-      break;
-    case SDLK_KP_MINUS:
-      m_camera->zoomOut();
-     break;
-    default:
-      std::cout << "invalid button input: " << sdl_event.key.keysym.sym << std::endl;
-      break;
-  }
 }
 
 std::string Graphics::ErrorString(GLenum error)
