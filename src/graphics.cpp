@@ -138,8 +138,7 @@ bool Graphics::Update(unsigned int dt)
       UpdatePlayers(dt);
       CheckBounds();
       UpdateAIOpponent(dt);
-      UpdateScore(dt);
-      return true;
+      return UpdateScore(dt);
       break;
 
     case EXIT:
@@ -278,6 +277,22 @@ void Graphics::ShiftCamera(Direction dir) {
 }
 
 void Graphics::Keyboard(SDL_Event sdl_event) {
+  if (sdl_event.type == SDL_JOYAXISMOTION) {
+    if (sdl_event.jaxis.value < -3200) {
+      if (sdl_event.jaxis.axis == 0) {
+        m_player->moveDirection(LEFT);
+      } else {
+        m_player->moveDirection(UP);
+      }
+    } else if (sdl_event.jaxis.value > 3200) {
+      if (sdl_event.jaxis.axis == 0) {
+        m_player->moveDirection(RIGHT);
+      } else {
+        m_player->moveDirection(DOWN);
+      }
+    }
+  }
+
   switch (sdl_event.key.keysym.sym) {
     case SDLK_UP:
       m_player->moveDirection(UP);

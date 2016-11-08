@@ -124,23 +124,11 @@ void Engine::Keyboard()
         break;
 			default:
 				m_graphics->Keyboard(m_event);
-				break;
-		}
-  }
-  else if (m_event.type == SDL_JOYAXISMOTION){
-    if (m_event.jaxis.value < -3200) {
-      if (m_event.jaxis.axis == 0) {
-        printf("we moved left\n");
-      } else { // it equals '1'
-        printf("we moved up\n");
-      }
-    } else if (m_event.jaxis.value > 3200) {
-      if (m_event.jaxis.axis == 0) {
-        printf("we moved right\n");
-      } else {
-        printf("we moved down\n");
-      }
+        break;
     }
+  }
+  else {
+    m_graphics->Keyboard(m_event);
   }
 }
 
