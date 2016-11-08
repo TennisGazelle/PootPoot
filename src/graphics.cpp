@@ -161,24 +161,24 @@ bool Graphics::UpdateAIOpponent(unsigned int dt) {
   static unsigned int movementTimer = 0;
   static unsigned int shootingTimer = 0;
   static int mod = 4;
-  Direction opponentDir;
-  
+  Direction opponentPositionDir;
+  Direction opponentShootingDir;
   switch(movementTimer % mod) {
      case 0:
-       opponentDir = UP; break;
+       opponentPositionDir = UP; opponentShootingDir = DOWN; break;
      case 1:
-       opponentDir = DOWN; break;
+       opponentPositionDir = DOWN; opponentShootingDir = UP; break;
      case 2:
-       opponentDir = LEFT; break;
+       opponentPositionDir = LEFT; opponentShootingDir = RIGHT; break;
      case 3:
-       opponentDir = RIGHT; break;
+       opponentPositionDir = RIGHT; opponentShootingDir = LEFT; break;
   }
 
   if (movementTimer % 100 < 7) {
-    m_opponent->moveDirection(opponentDir);
+    m_opponent->moveDirection(opponentPositionDir);
   }
-  if (shootingTimer % 157 == 0) {
-    m_opponent->shootDirection(opponentDir);
+  if (shootingTimer % 100 < 1) {
+    m_opponent->shootDirection(opponentShootingDir);
   }
 
   movementTimer = rand() % 100;
@@ -297,7 +297,7 @@ void Graphics::Keyboard(SDL_Event sdl_event) {
         m_player->shootDirection(RIGHT);
         break;
       case 1:
-        m_player->moveDirection(DOWN);
+        m_player->shootDirection(DOWN);
         break;
       case 2:
         m_player->shootDirection(UP);

@@ -44,9 +44,9 @@ glm::mat4 BulletHolder::GetModelAt(unsigned int index) {
 void BulletHolder::makeNewBullet(glm::vec3 pDirection, glm::vec3 pInitialPosition) {
 	// create new entry
 	BulletInfo bulletInfo = {
-		500, glm::mat4(1.0f), glm::vec4(pDirection, 0.0f) 
+		rand()%300+150, glm::mat4(1.0f), glm::vec4(pDirection, 0.0f) 
 	};
-	bulletInfo.model[3] = glm::vec4(pInitialPosition+(100.0f*pDirection), bulletInfo.model[3][3]);
+	bulletInfo.model[3] = glm::vec4(pInitialPosition+(150.0f*pDirection), bulletInfo.model[3][3]);
 	bullets.push_back(bulletInfo);
 }
 
